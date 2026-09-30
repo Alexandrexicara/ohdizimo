@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>É OHDISMO — Plataforma de Dízimos e Doações</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* CABEÇALHO — Fundo Preto + Verde Fluorescente */
+    header {
+      background: #000000;
+      padding: 20px 30px;
+      border-bottom: 3px solid #39FF14;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 0 15px #39FF14, 0 4px 20px rgba(57, 255, 20, 0.3);
+    }
+
+    .cabecalho-conteudo {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-icone {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 0 8px #39FF14);
+    }
+
+    .logo-texto {
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #39FF14;
+      text-shadow: 0 0 10px #39FF14, 0 0 20px #39FF14;
+      letter-spacing: 1px;
+    }
+
+    .navegacao a {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 25px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .navegacao a:hover {
+      color: #39FF14;
+      text-shadow: 0 0 8px #39FF14;
+    }
+
+    .navegacao a::after {
+      content: '';
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: #39FF14;
+      box-shadow: 0 0 8px #39FF14;
+      transition: width 0.3s ease;
+    }
+
+    .navegacao a:hover::after {
+      width: 100%;
+    }
+
+    /* CORPO — CORES ORIGINAIS */
+    body {
+      background: linear-gradient(135deg, #e6f0fa 0%, #d1e0f0 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    main {
+      flex: 1;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 50px 20px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      margin-bottom: 40px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      color: #1a5fb8;
+      margin-bottom: 15px;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #4b5563;
+      margin-bottom: 35px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .botoes {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 16px 35px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-principal {
+      background: linear-gradient(90deg, #1a5fb8, #2563eb);
+      color: white;
+      box-shadow: 0 4px 12px rgba(26, 95, 184, 0.3);
+    }
+
+    .btn-principal:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(26, 95, 184, 0.4);
+    }
+
+    .btn-sucesso {
+      background: linear-gradient(90deg, #00a86b, #10b981);
+      color: white;
+      box-shadow: 0 4px 12px rgba(0, 168, 107, 0.3);
+    }
+
+    .btn-sucesso:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 168, 107, 0.4);
+    }
+
+    .destaques {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card h3 {
+      color: #1f2937;
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    .card p {
+      color: #6b7280;
+      line-height: 1.6;
+    }
+
+    /* RODAPÉ — FUNDO PRETO + VERDE FLUORESCENTE */
+    footer {
+      background: #000000;
+      color: #cccccc;
+      padding: 35px 20px;
+      border-top: 2px solid #39FF14;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    .rodape-conteudo {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .rodape-logo {
+      font-size: 1.4rem;
+      font-weight: 900;
+      color: #39FF14;
+      text-shadow: 0 0 8px #39FF14;
+      margin-bottom: 15px;
+    }
+
+    .rodape-texto {
+      font-size: 0.9rem;
+      color: #888888;
+      margin-bottom: 10px;
+    }
+
+    .rodape-destaque {
+      color: #39FF14;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CABEÇALHO -->
+  <header>
+    <div class="cabecalho-conteudo">
+      <a href="/" class="logo">
+        <span class="logo-icone">✝️</span>
+        <span class="logo-texto">É OHDISMO</span>
+      </a>
+      <nav class="navegacao">
+        <a href="/">Início</a>
+        <a href="/igreja/cadastro">Sou Igreja</a>
+        <a href="/fiel/cadastro">Sou Fiel</a>
+        <a href="/admin">Painel</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- CONTEÚDO — CORES ORIGINAIS -->
+  <main>
+    <div class="container">
+      <section class="hero">
+        <h1>Plataforma de Dízimos e Doações</h1>
+        <p>Faça parte de uma forma simples, rápida e segura de contribuir com a sua igreja. Confirmação automática e sem complicações!</p>
+        <div class="botoes">
+          <a href="/igreja/cadastro" class="btn btn-principal">🏛️ Cadastrar Igreja</a>
+          <a href="/fiel/cadastro" class="btn btn-sucesso">🙏 Sou Fiel</a>
+        </div>
+      </section>
+
+      <section class="destaques">
+        <div class="card">
+          <h3>✅ Confirmação Automática</h3>
+          <p>Pagamento confirmado na hora pela plataforma — sem trabalho manual, sem esperar!</p>
+        </div>
+        <div class="card">
+          <h3>🔒 Seguro e Gratuito</h3>
+          <p>Transações protegidas. A igreja recebe direto na sua conta. Sem taxas escondidas.</p>
+        </div>
+        <div class="card">
+          <h3>📱 Simples de Usar</h3>
+          <p>Do celular ou computador. Em poucos cliques sua contribuição está feita!</p>
+        </div>
+        <div class="card">
+          <h3>💚 Para Qualquer Igreja</h3>
+          <p>Igreja de qualquer tamanho. Sem burocracia. Comece hoje mesmo!</p>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- RODAPÉ -->
+  <footer>
+    <div class="rodape-conteudo">
+      <div class="rodape-logo">É OHDISMO</div>
+      <p class="rodape-texto">Plataforma de Dízimos e Doações — <span class="rodape-destaque">Tudo para a glória de Deus</span> 🙏</p>
+      <p class="rodape-texto">&copy; 2026 É OHDISMO — Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+</body>
+</html>

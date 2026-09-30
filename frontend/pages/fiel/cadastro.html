@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cadastro do Fiel — É OHDISMO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+    :root {
+      --primario: #1a5fb8; --sucesso: #00a86b; --perigo: #dc2626; --aviso: #f59e0b;
+      --fundo: #f0f4f8; --branco: #ffffff; --texto: #1f2937; --texto-claro: #6b7280; --borda: #d1d5db;
+    }
+    body { background: linear-gradient(135deg, #e6f0fa 0%, #d1e0f0 100%); min-height: 100vh; padding: 20px; }
+    .voltar { color: var(--primario); text-decoration: none; font-weight: 600; display: inline-block; margin-bottom: 20px; }
+    .voltar:hover { text-decoration: underline; }
+    .container { max-width: 550px; margin: 0 auto; }
+    .card { background: var(--branco); border-radius: 16px; padding: 35px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    h1 { color: var(--sucesso); font-size: 1.7rem; margin-bottom: 25px; }
+    .vinculo { background: #ecfdf3; border-left: 4px solid var(--sucesso); padding: 15px; border-radius: 8px; margin-bottom: 25px; }
+    .sem-vinculo { background: #fffbeb; border-left: 4px solid var(--aviso); padding: 15px; border-radius: 8px; margin-bottom: 25px; }
+    .erro-vinculo { background: #fef2f2; border-left: 4px solid var(--perigo); padding: 15px; border-radius: 8px; margin-bottom: 25px; color: #b91c1c; }
+    label { display: block; font-weight: 600; margin: 16px 0 6px; color: var(--texto); }
+    input, select {
+      width: 100%; padding: 13px 15px; border: 2px solid var(--borda); border-radius: 10px;
+      font-size: 1rem; transition: border-color 0.3s;
+    }
+    input:focus, select:focus { outline: none; border-color: var(--sucesso); }
+    .btn {
+      width: 100%; padding: 15px; margin-top: 25px; border: none; border-radius: 10px;
+      font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      background: linear-gradient(90deg, var(--sucesso), #10b981); color: white;
+      transition: transform 0.3s;
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn:hover:not(:disabled) { transform: scale(1.02); }
+    .sucesso-box { background: #ecfdf3; border-left: 4px solid var(--sucesso); padding: 20px; border-radius: 8px; margin-top: 25px; }
+    .sucesso-box h3 { color: var(--sucesso); margin-bottom: 10px; }
+    .link-painel { display: inline-block; margin-top: 12px; padding: 12px 24px; background: var(--sucesso); color: white; text-decoration: none; border-radius: 8px; font-weight: 700; }
+    .link-painel:hover { background: #008a58; }
+    .erro-box { background: #fef2f2; border-left: 4px solid var(--perigo); padding: 15px; border-radius: 8px; margin-top: 20px; color: #b91c1c; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="../../" class="voltar">← Voltar</a>
+    <div class="card">
+      <h1>🙏 Cadastro do Fiel</h1>
+      <div id="dadosIgreja"></div>
+
+      <form id="formFiel">
+        <input type="hidden" id="igreja_id" name="igreja_id">
+
+        <label for="igreja_selecionar">Escolha sua Igreja *</label>
+        <select id="igreja_selecionar" required>
+          <option value="">-- Selecione uma igreja --</option>
+        </select>
+
+        <label>Nome Completo *</label>
+        <input type="text" name="nome" required placeholder="Seu nome completo">
+
+        <label>CPF *</label>
+        <input type="text" name="cpf" required placeholder="Apenas números">
+
+        <label>Telefone (WhatsApp) *</label>
+        <input type="tel" name="telefone" required placeholder="(38) 9XXXX-XXXX">
+
+        <label>E-mail</label>
+        <input type="email" name="email" placeholder="Seu e-mail">
+
+        <label>Senha de Acesso *</label>
+        <input type="password" name="senha" required placeholder="Mínimo 6 caracteres">
+
+        <button type="submit" class="btn" id="botaoCadastrar">Finalizar Cadastro ✅</button>
+      </form>
+
+      <div id="resultado"></div>
+    </div>
+  </div>
+
+  <script>
+    const caminho = window.location.pathname.split('/');
+    const link = caminho[caminho.length - 1];
+    let igrejaEncontrada = null;
+
+    // Se vier pelo link direto → carrega automaticamente
+    if (link && link !== 'cadastro') {
+      fetch(`/api/igrejas/link/${link}`)
+        .then(r => r.json())
+        .then(res => {
+          const div = document.getElementById('dadosIgreja');
+          if (res.sucesso) {
+            igrejaEncontrada = res.igreja;
+            document.getElementById('igreja_id').value = res.igreja.id;
+            div.innerHTML = `
+              <div class="vinculo">
+                ✅ Vinculado a: <strong>${res.igreja.nome}</strong><br>
+                📅 Vencimento todo dia <strong>${res.igreja.data_vencimento_dia}</strong> de cada mês
+              </div>`;
+            document.getElementById('igreja_selecionar').style.display = 'none';
+          } else {
+            div.innerHTML = `<div class="erro-vinculo">❌ Igreja não encontrada. Selecione abaixo.</div>`;
+            carregarListaIgrejas();
+          }
+        })
+        .catch(() => carregarListaIgrejas());
+    } else {
+      // Acesso direto → mostra lista
+      carregarListaIgrejas();
+    }
+
+    // Carregar lista de igrejas
+    async function carregarListaIgrejas() {
+      const div = document.getElementById('dadosIgreja');
+      div.innerHTML = `<div class="sem-vinculo">Selecione sua igreja na lista abaixo 👇</div>`;
+      
+      try {
+        // Buscar todas as igrejas cadastradas
+        const res = await fetch('/api/igrejas/lista');
+        if (res.ok) {
+          const lista = await res.json();
+          const select = document.getElementById('igreja_selecionar');
+          
+          lista.forEach(ig => {
+            const opt = document.createElement('option');
+            opt.value = ig.id;
+            opt.textContent = ig.nome;
+            select.appendChild(opt);
+          });
+          
+          select.addEventListener('change', () => {
+            document.getElementById('igreja_id').value = select.value;
+          });
+        }
+      } catch (e) {
+        console.log('Aguardando banco...');
+      }
+    }
+
+    // Enviar cadastro
+    document.getElementById('formFiel').addEventListener('submit', async e => {
+      e.preventDefault();
+      
+      const igrejaId = document.getElementById('igreja_id').value || document.getElementById('igreja_selecionar').value;
+      
+      if (!igrejaId) {
+        document.getElementById('resultado').innerHTML = `<div class="erro-box">❌ Selecione sua igreja primeiro!</div>`;
+        return;
+      }
+
+      const formData = new FormData(e.target);
+      const dados = Object.fromEntries(formData);
+      dados.igreja_id = Number(igrejaId);
+
+      const res = await fetch('/api/fieis/cadastro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+      });
+
+      const resposta = await res.json();
+      const div = document.getElementById('resultado');
+
+      if (resposta.sucesso) {
+        div.innerHTML = `
+          <div class="sucesso-box">
+            <h3>✅ Cadastro Realizado!</h3>
+            <p>Bem-vindo! Agora você faz parte da comunidade.</p>
+            <a href="dashboard" class="link-painel">Ir ao Meu Dízimo →</a>
+          </div>`;
+      } else {
+        div.innerHTML = `<div class="erro-box">❌ Erro: ${resposta.erro}</div>`;
+      }
+    });
+  </script>
+</body>
+</html>

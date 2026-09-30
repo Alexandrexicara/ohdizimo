@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel da Igreja — É OHDISMO</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
+    :root {
+      --primario: #1a5fb8; --sucesso: #00a86b; --aviso: #f59e0b; --perigo: #dc2626;
+      --fundo: #f0f4f8; --branco: #ffffff; --texto: #1f2937; --texto-claro: #6b7280; --borda: #e5e7eb;
+    }
+    body { background: var(--fundo); min-height: 100vh; padding: 25px; }
+    .cabecalho { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    h1 { color: var(--primario); font-size: 1.8rem; }
+    .btn-sair { color: white; background: var(--perigo); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 600; }
+    .grade { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
+    .card { background: var(--branco); border-radius: 14px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+    .card h3 { color: var(--primario); margin-bottom: 12px; font-size: 1.1rem; }
+    .valor-destaque { font-size: 1.8rem; font-weight: 800; color: var(--sucesso); }
+    code { background: #e5e7eb; padding: 10px; display: block; border-radius: 6px; margin: 10px 0; word-break: break-all; font-size: 0.85rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--borda); }
+    th { background: #f9fafb; font-weight: 700; color: var(--primario); }
+    .status-pago { color: var(--sucesso); font-weight: 700; }
+    .status-pendente { color: var(--aviso); font-weight: 700; }
+    .vazio { text-align: center; padding: 30px; color: var(--texto-claro); }
+  </style>
+</head>
+<body>
+  <div style="max-width: 1100px; margin: 0 auto;">
+    <div class="cabecalho">
+      <h1>🛐 Painel da Igreja</h1>
+      <a href="../../" class="btn-sair">Sair</a>
+    </div>
+
+    <div class="grade">
+      <div class="card">
+        <h3>📲 Link de Divulgação</h3>
+        <p>Compartilhe este link com seus fiéis:</p>
+        <code>${window.location.origin}/fiel/cadastro/SEU_LINK</code>
+        <p style="margin-top: 10px; font-size: 0.9rem; color: var(--texto-claro);">QR Code disponível no cadastro</p>
+      </div>
+
+      <div class="card">
+        <h3>💰 Taxa da Plataforma</h3>
+        <p style="font-size: 1.5rem; font-weight: 800; color: var(--primario);" id="taxaAtual">5%</p>
+        <p style="font-size: 0.85rem; color: var(--texto-claro); margin-top: 8px;">Definido pela administração da plataforma</p>
+      </div>
+
+      <div class="card">
+        <h3>📅 Vencimento</h3>
+        <p style="font-size: 1.5rem; font-weight: 800; color: var(--aviso);">Dia 10</p>
+        <p style="font-size: 0.85rem; color: var(--texto-claro); margin-top: 8px;">De cada mês, conforme configurado</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📋 Últimos Pagamentos</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Fiel</th>
+            <th style="text-align:right;">Valor</th>
+            <th style="text-align:right;">Repassado</th>
+            <th style="text-align:center;">Status</th>
+          </tr>
+        </thead>
+        <tbody id="listaPagamentos">
+          <tr><td colspan="4" class="vazio">Faça login para visualizar os dados</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-top: 25px;">
+      <h3>👥 Fiéis Cadastrados</h3>
+      <ul id="listaFieis" style="margin-top: 15px; list-style: none;">
+        <li style="color: var(--texto-claro); padding: 10px;">Faça login para ver a lista</li>
+      </ul>
+    </div>
+  </div>
+
+  <script>
+    fetch('/api/plataforma/taxa')
+      .then(r => r.json())
+      .then(res => {
+        document.getElementById('taxaAtual').textContent = res.taxa_atual + '%';
+      });
+  </script>
+</body>
+</html>

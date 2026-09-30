@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: ohdismo
+    runtime: node
+    region: sa
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: BASE_URL
+        value: https://ohdismo.onrender.com
+      - key: DATABASE_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SUMUP_API_KEY
+        value: sup_sk_zCwWOYS14uPQAckOzNw6CCVlmsDrHHsJQ
+      - key: SUMUP_MERCHANT_ID
+        value: MG2ZFDH6
+      - key: SUMUP_CHAVE_PIX_SUA
+        value: SUA.CHAVE.PIX.AQUI
+    autoDeploy: true
+    branch: main

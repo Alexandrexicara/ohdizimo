@@ -1,0 +1,13 @@
+const e=require('express');const cors=require('cors');require('dotenv').config();
+const app=e();app.use(cors());app.use(e.json());app.use(e.static('frontend'));
+app.use('/api/igrejas',require('./routes/igrejas'));
+app.use('/api/fieis',require('./routes/fieis'));
+app.use('/api/pagamentos',require('./routes/pagamentos'));
+app.use('/api/plataforma',require('./routes/plataforma'));
+app.get('/',(req,res)=>res.sendFile('frontend/public/index.html',{root:__dirname+'/..'}));
+app.get('/igreja/cadastro',(req,res)=>res.sendFile('frontend/pages/igreja/cadastro.html',{root:__dirname+'/..'}));
+app.get('/fiel/cadastro/:link?',(req,res)=>res.sendFile('frontend/pages/fiel/cadastro.html',{root:__dirname+'/..'}));
+app.get('/igreja/dashboard',(req,res)=>res.sendFile('frontend/pages/igreja/dashboard.html',{root:__dirname+'/..'}));
+app.get('/fiel/dashboard',(req,res)=>res.sendFile('frontend/pages/fiel/dashboard.html',{root:__dirname+'/..'}));
+app.get('/admin',(req,res)=>res.sendFile('frontend/pages/plataforma/dashboard.html',{root:__dirname+'/..'}));
+module.exports=app;
