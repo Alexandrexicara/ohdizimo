@@ -7,11 +7,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 
-// Rotas
+// Todas as rotas
 app.use('/api/igrejas', require('./routes/igrejas'));
 app.use('/api/fieis', require('./routes/fieis'));
 app.use('/api/pagamentos', require('./routes/pagamentos'));
 app.use('/api/sumup', require('./routes/sumup'));
+app.use('/api/plataforma', require('./routes/plataforma'));
 
 // Páginas
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../frontend/public/index.html')));
@@ -20,7 +21,6 @@ app.get('/fiel/cadastro', (req, res) => res.sendFile(path.join(__dirname, '../fr
 app.get('/fiel/cadastro/:link', (req, res) => res.sendFile(path.join(__dirname, '../frontend/pages/fiel/cadastro.html')));
 app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, '../frontend/pages/plataforma/dashboard.html')));
 
-// Health check para Render
 app.get('/health', (req, res) => res.send('OK'));
 
 const PORTA = process.env.PORT || 3000;

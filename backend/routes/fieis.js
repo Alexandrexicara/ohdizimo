@@ -1,4 +1,17 @@
-const e=require('express');const r=e.Router();const {cadastrar,listarPorIgreja}=require('../controllers/fielController');
-r.post('/cadastro',async (req,res)=>{try{const f=await cadastrar(req.body);res.json({sucesso:true,dados:f})}catch(e){res.status(400).json({sucesso:false,erro:e.message})}});
-r.get('/lista/:igreja_id',async (req,res)=>res.json(await listarPorIgreja(req.params.igreja_id)));
-module.exports=r;
+const express = require('express');
+const router = express.Router();
+const db = require('../config/db');
+
+router.get('/lista/:igreja_id', async (req, res) => {
+  try {
+    const resu = await db.query(
+      'SELECT id, nome, telefone, criado_em FROM fieis WHERE igreja_id=$1 ORDER BY nome',
+      [req.params.igreja_id]
+    );
+    res.json(resu.rows);
+  } catch (erro) {
+    res.status(500).json({ erro: erro.message });
+  }
+});
+
+module.exports = router;
