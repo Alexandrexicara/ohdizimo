@@ -3,48 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cadastro da Igreja — É OHDIZIMO</title>
+  <title>Cadastro da Igreja — É OHDISMO</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Arial, sans-serif; }
-    :root {
-      --verde: #39FF14; --fundo: #000; --cinza: #1a1a1a; --texto: #fff; --aviso: #1c2e1c;
-    }
+    :root { --verde: #39FF14; --fundo: #000; --cinza: #1a1a1a; --texto: #fff; --aviso: #1c2e1c; }
     body { background: linear-gradient(135deg, #0f1419 0%, #000 100%); min-height: 100vh; padding: 20px; color: var(--texto); }
-    
-    header {
-      background: #000; padding: 15px 30px; border-bottom: 2px solid var(--verde);
-      box-shadow: 0 0 15px var(--verde); margin: -20px -20px 30px -20px;
-    }
+    header { background: #000; padding: 15px 30px; border-bottom: 2px solid var(--verde); box-shadow: 0 0 15px var(--verde); margin: -20px -20px 30px -20px; }
     .logo { font-size: 1.8rem; font-weight: 900; color: var(--verde); text-shadow: 0 0 10px var(--verde); text-align: center; }
-    
     .container { max-width: 650px; margin: 0 auto; }
     .card { background: #111; border-radius: 16px; padding: 30px; box-shadow: 0 0 20px rgba(57,255,20,0.15); border: 1px solid #2a2; }
-    
     h1 { color: var(--verde); text-align: center; margin-bottom: 25px; font-size: 1.6rem; }
     h3 { color: var(--verde); margin: 25px 0 12px; font-size: 1.1rem; border-bottom: 1px solid #333; padding-bottom: 8px; }
-    
-    .caixa-instrucao {
-      background: var(--aviso); border-left: 3px solid var(--verde); padding: 18px; border-radius: 8px; margin-bottom: 25px;
-      line-height: 1.8;
-    }
+    .caixa-instrucao { background: var(--aviso); border-left: 3px solid var(--verde); padding: 18px; border-radius: 8px; margin-bottom: 25px; line-height: 1.8; }
     .caixa-instrucao a { color: var(--verde); font-weight: bold; text-decoration: underline; }
     .passo { margin: 12px 0; padding-left: 30px; position: relative; }
     .passo strong { color: var(--verde); }
-    
     label { display: block; font-weight: 600; margin: 18px 0 6px; color: #ddd; }
-    input {
-      width: 100%; padding: 12px 15px; border: 2px solid #333; border-radius: 8px;
-      background: #1a1a1a; color: white; font-size: 1rem;
-    }
+    input { width: 100%; padding: 12px 15px; border: 2px solid #333; border-radius: 8px; background: #1a1a1a; color: white; font-size: 1rem; }
     input:focus { outline: none; border-color: var(--verde); box-shadow: 0 0 8px var(--verde); }
-    
-    .btn {
-      width: 100%; padding: 15px; margin-top: 25px; border: none; border-radius: 10px;
-      font-size: 1.1rem; font-weight: 700; background: linear-gradient(90deg, #00a86b, var(--verde));
-      color: #000; cursor: pointer; box-shadow: 0 0 12px var(--verde);
-    }
+    .btn { width: 100%; padding: 15px; margin-top: 25px; border: none; border-radius: 10px; font-size: 1.1rem; font-weight: 700; background: linear-gradient(90deg, #00a86b, var(--verde)); color: #000; cursor: pointer; box-shadow: 0 0 12px var(--verde); }
     .btn:hover { transform: scale(1.02); }
-    
     .resultado { margin-top: 20px; padding: 15px; border-radius: 8px; display: none; }
     .sucesso { background: #0f2f0f; border: 1px solid var(--verde); }
     .erro { background: #2f0f0f; border: 1px solid #f55; color: #f88; }
@@ -53,47 +31,19 @@
   </style>
 </head>
 <body>
-
-  <header>
-    <div class="logo">✝️ É OHDIZIMO</div>
-  </header>
-
+  <header><div class="logo">✝️ É OHDISMO</div></header>
   <div class="container">
     <div class="card">
       <h1>🏛️ Cadastro da Igreja</h1>
 
       <div class="caixa-instrucao">
-        <strong>📋 PRIMEIRO — Crie sua conta no SumUp e pegue os códigos</strong><br>
-        Siga os passos abaixo <strong>um por um</strong> — é fácil e não precisa saber de programação!
-
-        <div class="passo">
-          <strong>1.</strong> Entre no site: <a href="https://sumup.com.br" target="_blank">sumup.com.br</a>
-          <br>→ Crie sua conta (é grátis, como qualquer conta de banco)
-        </div>
-
-        <div class="passo">
-          <strong>2.</strong> Entre nesta página: <a href="https://developer.sumup.com" target="_blank">developer.sumup.com</a>
-          <br>→ Faça login com o mesmo e-mail e senha da sua conta SumUp
-        </div>
-
-        <div class="passo">
-          <strong>3.</strong> Seu <strong>Merchant ID</strong> aparece logo na página inicial!
-          <br>→ É um código que começa com a letra <strong>M</strong> e tem números. Exemplo: <strong>M12345678</strong>
-          <br>→ Copie esse código! É o "nome da sua conta" dentro do sistema.
-        </div>
-
-        <div class="passo">
-          <strong>4.</strong> Agora pegue sua <strong>Chave de Acesso (API Key)</strong>:
-          <br>→ No menu, clique em <strong>"API Keys"</strong> ou <strong>"Chaves de Acesso"</strong>
-          <br>→ Clique em <strong>"Create"</strong> ou <strong>"Criar Nova Chave"</strong>
-          <br>→ Pode colocar o nome: <strong>Minha Igreja</strong>
-          <br>→ Vai aparecer um código longo. Copie ele!
-          <br>→ <em>Essa chave é como uma "senha especial" que liga sua conta ao sistema.</em>
-        </div>
-
-        <div class="passo">
-          <strong>5.</strong> Pronto! Agora é só colar esses códigos nos campos abaixo 👇
-        </div>
+        <strong>📋 PRIMEIRO — Crie sua conta no SumUp</strong><br>
+        Siga os passos abaixo — é fácil e não precisa saber de programação!
+        <div class="passo"><strong>1.</strong> Entre em: <a href="https://sumup.com.br" target="_blank">sumup.com.br</a> → crie sua conta grátis</div>
+        <div class="passo"><strong>2.</strong> Entre em: <a href="https://developer.sumup.com" target="_blank">developer.sumup.com</a> → faça login</div>
+        <div class="passo"><strong>3.</strong> Seu <strong>Merchant ID</strong> aparece na página inicial — começa com M + números → copie!</div>
+        <div class="passo"><strong>4.</strong> Clique em <strong>"API Keys"</strong> → <strong>"Criar Nova Chave"</strong> → copie o código longo</div>
+        <div class="passo"><strong>5.</strong> Pronto! Cola nos campos abaixo 👇</div>
       </div>
 
       <form id="formIgreja">
@@ -102,8 +52,9 @@
         <label>Nome da Igreja *</label>
         <input type="text" name="nome" required placeholder="Ex: Igreja Batista Monte Sião">
 
-        <label>CNPJ *</label>
-        <input type="text" name="cnpj" required placeholder="Apenas números">
+        <label>CPF ou CNPJ *</label>
+        <input type="text" name="cpf_ou_cnpj" required placeholder="Se tem CNPJ coloca ele. Se não tem, coloca o CPF do responsável">
+        <p class="explicacao">✅ Não tem CNPJ? Sem problema! Usa o CPF do pastor/presidente</p>
 
         <label>Endereço</label>
         <input type="text" name="endereco" placeholder="Rua, número, bairro, cidade/UF">
@@ -115,7 +66,7 @@
         <input type="email" name="email" placeholder="igreja@email.com">
 
         <label>Senha de Acesso *</label>
-        <input type="password" name="senha" required placeholder="Crie uma senha — guarde bem!">
+        <input type="password" name="senha" required placeholder="Mínimo 6 caracteres — guarde bem!">
 
         <label>Valor sugerido do Dízimo (R$)</label>
         <input type="number" step="0.01" name="valor_dizimo_fixo" placeholder="Ex: 100.00">
@@ -125,18 +76,17 @@
 
         <h3>💳 Chave PIX da Igreja</h3>
         <label>Chave PIX para receber o dinheiro *</label>
-        <input type="text" name="chave_pix" required placeholder="Seu CPF, telefone, e-mail ou chave aleatória">
-        <p class="explicacao">→ O dinheiro do dízimo vai cair direto nessa chave PIX</p>
+        <input type="text" name="chave_pix" required placeholder="CPF, telefone, e-mail ou chave aleatória">
+        <p class="explicacao">→ O dinheiro cai direto nessa chave</p>
 
         <h3>🔑 Seus Códigos do SumUp</h3>
-        
-        <label>Merchant ID — Código da sua conta *</label>
+        <label>Merchant ID — Código da conta SumUp *</label>
         <input type="text" name="sumup_merchant_id" required placeholder="Ex: M1234567">
-        <p class="explicacao">→ Começa com letra M + números. Viu no passo 3 acima</p>
+        <p class="explicacao">→ Começa com letra M + números</p>
 
         <label>Chave de Acesso — API Key *</label>
         <input type="text" name="sumup_api_key" required placeholder="Começa com sk_ ou sup_sk_">
-        <p class="explicacao">→ Criou no passo 4. É a "senha especial" da sua conta</p>
+        <p class="explicacao">→ É a "senha especial" que você criou</p>
 
         <button type="submit" class="btn">Cadastrar Igreja ✅</button>
       </form>
@@ -168,7 +118,7 @@
           <p>Seu link para os fiéis se cadastrarem:</p>
           <code>${window.location.origin}/fiel/cadastro/${resposta.dados.link_unico}</code>
           <p style="margin-top:15px">Confirmação automática: <strong>ATIVADA ✅</strong></p>
-          <p style="margin-top:10px; font-size:0.9rem; color:#99">Guarde esse link! É assim que as pessoas vão contribuir para sua igreja.</p>
+          <p style="margin-top:10px; font-size:0.9rem; color:#99">Guarde esse link! É assim que as pessoas vão contribuir.</p>
         `;
       } else {
         div.className = 'resultado erro';

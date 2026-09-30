@@ -9,18 +9,19 @@ function gerarLinkUnico(nome) {
 
 router.post('/cadastro', async (req, res) => {
   try {
-    const { nome, cnpj, endereco, telefone, email, senha, valor_dizimo_fixo, data_vencimento_dia, chave_pix, sumup_merchant_id, sumup_api_key } = req.body;
+    const { nome, cpf_ou_cnpj, endereco, telefone, email, senha, valor_dizimo_fixo, data_vencimento_dia, chave_pix, sumup_merchant_id, sumup_api_key } = req.body;
+    
     const senha_hash = await bcrypt.hash(senha, 10);
     const link_unico = gerarLinkUnico(nome);
 
     const resu = await db.query(`
       INSERT INTO igrejas(
-        nome, cnpj, endereco, telefone, email, senha_hash,
+        nome, cpf_ou_cnpj, endereco, telefone, email, senha_hash,
         valor_dizimo_fixo, data_vencimento_dia, chave_pix,
         sumup_merchant_id, sumup_api_key, link_unico
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
       RETURNING id, link_unico, nome
-    `, [nome, cnpj, endereco, telefone, email, senha_hash, valor_dizimo_fixo, data_vencimento_dia, chave_pix, sumup_merchant_id, sumup_api_key, link_unico]);
+    `, [nome, cpf_ou_cnpj, endereco, telefone, email, senha_hash, valor_dizimo_fixo, data_vencimento_dia, chave_pix, sumup_merchant_id, sumup_api_key, link_unico]);
 
     res.json({ sucesso: true, dados: resu.rows[0] });
   } catch (erro) {
@@ -30,7 +31,7 @@ router.post('/cadastro', async (req, res) => {
 
 router.get('/lista', async (req, res) => {
   try {
-    const lista = await db.query('SELECT id, nome, cnpj, telefone, ativo, criado_em FROM igrejas ORDER BY nome');
+    const lista = await db.query('SELECT id, nome, cpf_ou_cnpj, telefone, ativo, criado_em FROM igrejas ORDER BY nome');
     res.json(lista.rows);
   } catch (erro) {
     console.log('Erro lista igrejas:', erro.message);
