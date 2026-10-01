@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagar Dízimo — É OHDIZIMO</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+    :root { --verde: #39FF14; --fundo: #000; --card: #111; --aviso: #1a2f1a; --erro: #f33; }
+    body { background:var(--fundo); color:#fff; padding:20px; max-width:500px; margin:0 auto; min-height:100vh; }
+    h1 { color:var(--verde); text-align:center; margin-bottom:25px; text-shadow:0 0 10px var(--verde); }
+    .card { background:var(--card); padding:25px; border-radius:14px; border:2px solid var(--verde); margin-bottom:20px; box-shadow:0 0 15px rgba(57,255,20,0.1); }
+    .passo { padding:15px; border-radius:10px; margin-bottom:12px; }
+    .passo-ativo { border:2px solid var(--verde); background:#0f1f0f; }
+    .passo-bloqueado { border:2px solid #333; opacity:0.6; }
+    .passo-concluido { border:2px solid var(--verde); background:#1a2f1a; }
+    input, select { width:100%; padding:14px; font-size:1.1rem; background:#222; border:1px solid #444; color:#fff; border-radius:8px; margin:8px 0; }
+    button { width:100%; padding:14px; background:linear-gradient(90deg, #00a86b, var(--verde)); color:#000; border:none; border-radius:8px; font-weight:bold; font-size:1.1rem; cursor:pointer; margin-top:10px; }
+    button:disabled { opacity:0.4; cursor:not-allowed; }
+    .aviso { background:var(--aviso); border-left:3px solid var(--verde); padding:12px; border-radius:6px; margin:12px 0; }
+    .codigo { background:#000; padding:12px; border-radius:6px; font-family:monospace; font-size:1rem; word-break:break-all; margin:8px 0; }
+    .etapa-num { display:inline-block; width:28px; height:28px; border-radius:50%; background:var(--verde); color:#000; text-align:center; font-weight:bold; margin-right:10px; }
+    .etapa-bloqueado { background:#444; color:#fff; }
+    .etapa-concluido { background:var(--verde); color:#000; }
+  </style>
+</head>
+<body>
+  <h1>⛪ É OHDIZIMO</h1>
+
+  <!-- PASSO 1 — DADOS E VALOR -->
+  <div class="card passo passo-ativo" id="passo1">
+    <h3><span class="etapa-num">1</span>Seus Dados e Valor</h3>
+    <input type="text" id="nome" placeholder="Seu nome completo">
+    <input type="tel" id="telefone" placeholder="Seu telefone com DDD">
+    <input type="number" id="igrejaId" placeholder="ID da sua igreja" step="1">
+    <input type="number" id="valorDizimo" placeholder="Valor do dízimo R$" step="0.01" min="1">
+    <button onclick="iniciar()">Continuar →</button>
+  </div>
+
+  <!-- PASSO 2 — PAGAR TAXA DA PLATAFORMA -->
+  <div class="card passo passo-bloqueado" id="passo2">
+    <h3><span class="etapa-num etapa-bloqueado">2</span>Pagar Taxa da Plataforma</h3>
+    <p>Valor da taxa: <strong id="valorTaxa">R$ 0,00</strong> (5%)</p>
+    <p style="font-size:0.9rem; color:#aaa; margin:8px 0;">Pague primeiro para liberar o PIX da igreja</p>
+    
+    <div class="aviso" id="aguardandoTaxa">
+      ⏳ Envie o PIX abaixo e aguarde a confirmação...
+      <div class="codigo" id="chavePlataforma">chave@plataforma.ohdizimo</div>
+      <button onclick="verificarTaxa()" id="btnVerificar">Já Paguei — Verificar</button>
+    </div>
+    
+    <div class="aviso" style="display:none;" id="taxaConfirmada">
+      ✅ TAXA CONFIRMADA! Agora pague o dízimo à igreja abaixo 👇
+    </div>
+  </div>
+
+  <!-- PASSO 3 — PAGAR DÍZIMO À IGREJA -->
+  <div class="card passo passo-bloqueado" id="passo3">
+    <h3><span class="etapa-num etapa-bloqueado">3</span>Pagar Dízimo à Igreja</h3>
+    <p>Igreja: <strong id="nomeIgreja">-</strong></p>
+    <p>Valor do dízimo: <strong id="valorDizimoFinal">R$ 0,00</strong></p>
+    
+    <div class="aviso">
+      💻 Copie a chave PIX da igreja e pague no seu banco:
+      <div class="codigo" id="chaveIgreja">-</div>
+    </div>
+    
+    <button onclick="confirmarDizimo()">✅ Paguei — Confirmar</button>
+  </div>
+
+  <!-- PASSO 4 — CONCLUÍDO -->
+  <div class="card" id="passo4" style="display:none; border-color:var(--verde);">
+    <h3 style="color:var(--verde);">🎉 Obrigado!</h3>
+    <p>Seu dízimo foi registrado com sucesso.</p>
+    <p style="font-size:0.9rem; color:#aaa;">Referência: <span id="refFinal">-</span></p>
+    <button onclick="window.location.reload()">Fazer Outro Dízimo</button>
+  </div>
+
+<script>
+let referencia = '';
+let taxaPaga = false;
+
+async function iniciar() {
+  const nome = document.getElementById('nome').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+  const igreja_id = document.getElementById('igrejaId').value;
+  const valor_dizimo = document.getElementById('valorDizimo').value;
+
+  if (!nome || !telefone || !igreja_id || !valor_dizimo) {
+    return alert('Preencha todos os campos');
+  }
+
+  const res = await fetch('/api/pagamento/iniciar', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ nome, telefone, igreja_id, valor_dizimo })
+  });
+
+  const dados = await res.json();
+  if (!dados.sucesso) return alert('Erro: ' + dados.erro);
+
+  referencia = dados.referencia;
+  document.getElementById('valorTaxa').textContent = `R$ ${dados.valorTaxa.toFixed(2)}`;
+  document.getElementById('nomeIgreja').textContent = dados.igrejaNome;
+  document.getElementById('valorDizimoFinal').textContent = `R$ ${dados.valorDizimo.toFixed(2)}`;
+
+  // Ativa passo 2
+  document.getElementById('passo1').style.display = 'none';
+  document.getElementById('passo2').classList.remove('passo-bloqueado');
+  document.getElementById('passo2').classList.add('passo-ativo');
+}
+
+async function verificarTaxa() {
+  if (!referencia) return;
+  
+  const res = await fetch(`/api/pagamento/status/${referencia}`);
+  const status = await res.json();
+
+  if (status.taxa_paga) {
+    taxaPaga = true;
+    document.getElementById('aguardandoTaxa').style.display = 'none';
+    document.getElementById('taxaConfirmada').style.display = 'block';
+    
+    // Pega chave PIX da igreja
+    document.getElementById('chaveIgreja').textContent = status.chave_pix_igreja || 'CHAVE-PIX-DA-IGREJA';
+    
+    // Libera passo 3
+    document.getElementById('passo2').classList.remove('passo-ativo');
+    document.getElementById('passo2').classList.add('passo-concluido');
+    document.querySelector('#passo2 .etapa-num').classList.add('etapa-concluido');
+    
+    document.getElementById('passo3').classList.remove('passo-bloqueado');
+    document.getElementById('passo3').classList.add('passo-ativo');
+    document.querySelector('#passo3 .etapa-num').classList.remove('etapa-bloqueado');
+    
+  } else {
+    alert('⏳ A taxa ainda não foi confirmada. Aguarde alguns instantes e tente de novo.');
+  }
+}
+
+async function confirmarDizimo() {
+  if (!confirm('Confirma que já enviou o PIX do dízimo para a igreja?')) return;
+  
+  await fetch('/api/pagamento/confirmar-dizimo', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ referencia })
+  });
+
+  document.getElementById('passo3').style.display = 'none';
+  document.getElementById('refFinal').textContent = referencia;
+  document.getElementById('passo4').style.display = 'block';
+}
+</script>
+</body>
+</html>

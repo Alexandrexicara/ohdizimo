@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registros de Dízimo — É OHDIZIMO</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:Arial,sans-serif; }
+    body { background:#000; color:#fff; padding:20px; max-width:700px; margin:0 auto; }
+    h1 { color:#39FF14; text-align:center; margin-bottom:20px; }
+    .item { background:#111; padding:15px; border-radius:10px; border-left:3px solid #39FF14; margin-bottom:10px; }
+    .pago { border-left-color:#39FF14; }
+    .pendente { border-left-color:#ff0; }
+    .dados { margin:5px 0; }
+    .etiqueta { display:inline-block; padding:3px 8px; border-radius:4px; font-size:0.85rem; margin-left:8px; }
+    .et-pago { background:#1a331a; color:#39FF14; }
+    .et-pendente { background:#332f00; color:#ff0; }
+    button { padding:8px 16px; background:#39FF14; color:#000; border:none; border-radius:6px; font-weight:bold; cursor:pointer; margin:10px 0; }
+    .vazio { color:#888; text-align:center; padding:30px; }
+  </style>
+</head>
+<body>
+  <h1>📋 Registros de Dízimo</h1>
+  
+  <input type="number" id="igrejaId" placeholder="Digite seu ID da Igreja" style="width:100%; padding:12px; font-size:1rem; background:#222; border:1px solid #39FF14; color:#fff; border-radius:8px;">
+  <button onclick="carregar()">🔄 Carregar</button>
+  
+  <div id="lista"></div>
+
+<script>
+async function carregar() {
+  const id = document.getElementById('igrejaId').value;
+  if (!id) return alert('Digite o ID da igreja');
+
+  const res = await fetch(`/api/pagamento/igreja/registros/${id}`);
+  const lista = await res.json();
+  const div = document.getElementById('lista');
+
+  if (lista.length === 0) {
+    div.innerHTML = '<p class="vazio">Nenhum registro ainda</p>';
+    return;
+  }
+
+  div.innerHTML = lista.map(item => {
+    let classe = item.dizimo_pago ? 'pago' : 'pendente';
+    let etiqueta = item.dizimo_pago 
+      ? '<span class="etiqueta et-pago">✅ Confirmado</span>' 
+      : '<span class="etiqueta et-pendente">⏳ Aguardando</span>';
+    
+    return `
+      <div class="item ${classe}">
+        <div class="dados"><strong>${item.fiel_nome}</strong> ${etiqueta}</div>
+        <div class="dados">📞 ${item.fiel_telefone || 'Não informado'}</div>
+        <div class="dados">💰 Dízimo: R$ ${Number(item.valor_dizimo).toFixed(2)}</div>
+        <div class="dados" style="font-size:0.85rem; color:#666;">Ref: ${item.referencia} — ${new Date(item.criado_em).toLocaleString('pt-BR')}</div>
+      </div>
+    `;
+  }).join('');
+}
+</script>
+</body>
+</html>
