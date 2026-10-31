@@ -13,12 +13,14 @@ services:
         value: https://ohdismo.onrender.com
       - key: DATABASE_URL
         sync: false
+      - key: MCP_API_TOKEN
+        sync: false
       - key: JWT_SECRET
         generateValue: true
       - key: SUMUP_API_KEY
-        value: sup_sk_zCwWOYS14uPQAckOzNw6CCVlmsDrHHsJQ
+        sync: false
       - key: SUMUP_MERCHANT_ID
-        value: MG2ZFDH6
+        sync: false
       - key: SUMUP_CHAVE_PIX_SUA
         value: SUA.CHAVE.PIX.AQUI
     autoDeploy: true
