@@ -18,7 +18,7 @@ function criarServidorMcp() {
   const server = new McpServer({ name: 'ohdizimo-mcp', version: '1.0.0' });
   server.registerTool('pesquisar_igrejas', { title: 'Pesquisar igrejas', description: 'Pesquisa igrejas pelo nome. Retorna somente ID, nome e situação; nunca expõe CPF/CNPJ, telefone, e-mail, endereço ou credenciais.', inputSchema: { termo: z.string().trim().max(80).optional().describe('Parte do nome da igreja; opcional.') } }, async ({ termo }) => {
     try { const busca = termo ? '%' + termo.replace(/[%_]/g, '\\$&') + '%' : null;
-      const r = await db.query("SELECT id, nome, ativo FROM igrejas WHERE ($1::text IS NULL OR nome ILIKE $1 ESCAPE E'\\\\') ORDER BY nome LIMIT 30", [busca]);
+      const r = await db.query("SELECT id, nome, ativo FROM igrejas WHERE ($1::text IS NULL OR nome ILIKE $1) ORDER BY nome LIMIT 30", [busca]);
       return { content: [{ type: 'text', text: JSON.stringify({ total_retornado: r.rows.length, limite: 30, igrejas: r.rows }, null, 2) }] };
     } catch (e) { console.error('[MCP] pesquisar_igrejas:', e.message); return { content: [{ type: 'text', text: 'Falha ao pesquisar igrejas no banco.' }], isError: true }; }
   });
