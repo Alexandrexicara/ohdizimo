@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
 });
 
 // APIs
+app.use('/mcp', require('./mcp'));
 app.use('/api/pagamento', require('./routes/pagamento'));
 app.use('/api/plataforma', require('./routes/plataforma'));
 app.use('/api/igrejas', require('./routes/igrejas'));
