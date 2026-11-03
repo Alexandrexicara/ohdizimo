@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /igreja/dashboard
+Disallow: /fiel/dashboard
+Disallow: /igreja/registros
+
+Sitemap: https://ohdismo.onrender.com/sitemap.xml
